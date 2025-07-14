@@ -51,66 +51,65 @@ Short URL API is a web service written in Python using the FastAPI framework. Th
 
 ```
 ./shorter
-├── alembic.ini
-├── docker-compose.yaml
-├── Dockerfile
 ├── infrastructure
 │   └── database
-│       ├── base.py
 │       ├── crud
 │       │   ├── abc.py
 │       │   ├── base.py
 │       │   ├── __init__.py
 │       │   └── short.py
-│       ├── database.py
-│       ├── __init__.py
 │       ├── migrations
+│       │   ├── versions
+│       │   │   └── 2025_07_10_2100-273eeb780890_initial.py
 │       │   ├── env.py
 │       │   ├── README
-│       │   ├── script.py.mako
-│       │   └── versions
-│       │       └── 2025_07_10_2100-273eeb780890_initial.py
-│       ├── mixins.py
-│       └── models
-│           ├── base.py
-│           ├── __init__.py
-│           └── short.py
+│       │   └── script.py.mako
+│       ├── models
+│       │   ├── base.py
+│       │   ├── __init__.py
+│       │   └── short.py
+│       ├── base.py
+│       ├── database.py
+│       ├── __init__.py
+│       └── mixins.py
+├── src
+│   ├── config
+│   │   ├── components
+│   │   │   ├── cors
+│   │   │   │   ├── cors.py
+│   │   │   │   └── __init__.py
+│   │   │   └── database
+│   │   │       ├── database.py
+│   │   │       └── __init__.py
+│   │   ├── config.py
+│   │   ├── constants.py
+│   │   └── __init__.py
+│   ├── routers
+│   │   ├── health
+│   │   │   ├── __init__.py
+│   │   │   └── views.py
+│   │   ├── redirect
+│   │   │   ├── __init__.py
+│   │   │   ├── schemas.py
+│   │   │   └── views.py
+│   │   ├── short
+│   │   │   ├── service
+│   │   │   │   ├── base.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── service.py
+│   │   │   ├── __init__.py
+│   │   │   ├── schemas.py
+│   │   │   └── views.py
+│   │   ├── __init__.py
+│   │   ├── router.py
+│   │   └── schemas.py
+│   ├── __init__.py
+│   └── main.py
+├── alembic.ini
+├── docker-compose.yaml
+├── Dockerfile
 ├── pyproject.toml
-├── readme.md
-└── src
-    ├── config
-    │   ├── components
-    │   │   ├── cors
-    │   │   │   ├── cors.py
-    │   │   │   └── __init__.py
-    │   │   └── database
-    │   │       ├── database.py
-    │   │       └── __init__.py
-    │   ├── config.py
-    │   ├── constants.py
-    │   └── __init__.py
-    ├── __init__.py
-    ├── main.py
-    └── routers
-        ├── health
-        │   ├── __init__.py
-        │   └── views.py
-        ├── __init__.py
-        ├── redirect
-        │   ├── __init__.py
-        │   ├── schemas.py
-        │   └── views.py
-        ├── router.py
-        ├── schemas.py
-        └── short
-            ├── __init__.py
-            ├── schemas.py
-            ├── service
-            │   ├── base.py
-            │   ├── __init__.py
-            │   └── service.py
-            └── views.py
-
+└── readme.md
 ```
 
 ### Running the Service

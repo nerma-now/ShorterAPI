@@ -5,33 +5,33 @@ Short URL API is a web service written in Python using the FastAPI framework. Th
 ### API Endpoints:
 
 ### Health Check
-`GET /health/`  
+`GET /healths/`  
 - Check service health status
 
 
 ### Short URL Management
-`GET /short/`  
+`GET /shorts/`  
 - Retrieve all short URLs
 
 
-`GET /short/lookup`  
-- Retrieve a short URL by ID or code  
+`GET /shorts/{id}`  
+- Retrieve a short URL by ID  
 
-`POST /short/`  
+`POST /shorts/`  
 - Create a new short URL  
 
 
-`DELETE /short/`  
+`DELETE /shorts/`  
 - DANGER: Delete ALL short URLs
 
-`DELETE /short/{id}`  
+`DELETE /shorts/{id}`  
 - Delete a specific short URL by ID  
 
-`PUT /short/{id}`  
+`PUT /shorts/{id}`  
 - Update a short URL's properties  
 
 ### Redirection
-`GET /redirect/{code}`  
+`GET /redirects/{code}`  
 - Redirect to original URL  
 
 (Full API documentation available via Swagger UI at `/` (or `/redoc`) when service is running.)

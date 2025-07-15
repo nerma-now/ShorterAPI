@@ -13,12 +13,11 @@ from infrastructure.database.models import Short
 from infrastructure.database.crud import ShortRepository
 
 from .service import Service
-from .schemas import BaseShort, CreateShort, SingleGetShort, FullGetShort, UpdateShort
-
+from .schemas import BaseShort, CreateShort, GetShortByID, UpdateShort
 
 router: APIRouter = APIRouter(
-    prefix="/short",
-    tags=["short"]
+    prefix="/shorts",
+    tags=["shorts"]
 )
 
 
@@ -126,52 +125,34 @@ async def get_shorts(session: Annotated[AsyncSession, Depends(database.session)]
 
 
 @router.get(
-    path="/lookup",
+    path="/{id}",
     response_model=Response,
     status_code=HTTPStatus.OK,
-    summary="Retrieve a short URL by ID or code",
+    summary="Retrieve a short URL by ID",
     description="""
     Returns details for a specific short URL
 
-    Note: Must provide either id or code parameter, but not both.
-
     Responses:
     - 200 OK: Returns the requested short URL details
-    - 400 Bad Request: If neither id nor code is provided
     - 404 Not Found: If no matching short URL exists
     """,
     response_description="Short URL details"
 )
-async def get_short(session: Annotated[AsyncSession, Depends(database.session)],
-                    model: Annotated[FullGetShort, Header()]) -> Response:
-    """Retrieve details for a short URL by either ID or code.
+async def get_short_by_id(session: Annotated[AsyncSession, Depends(database.session)],
+                          model: Annotated[GetShortByID, Path()]) -> Response:
+    """Retrieve details for a short URL by either ID.
 
     Args:
         session: Database session
-        id: UUID of the short URL (optional)
-        code: Short code of the URL (optional)
+        id: UUID of the short URL
 
     Returns:
         Response containing the short URL details if found
 
     Raises:
-        HTTPException 400: If neither id nor code is provided
         HTTPException 404: If no matching short URL exists
     """
-    short: Optional[Short] = None
-
-    if model.id is not None:
-        short = await ShortRepository().get(session=session, target=Short.id, value=model.id)
-    elif model.code is not None:
-        short = await ShortRepository().get(session=session, target=Short.code, value=model.code)
-    else:
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=ErrorResponse(
-                detail=[Message(msg="No id and code for get object")]
-            ).model_dump()
-        )
-
+    short: Optional[Short] = await ShortRepository().get(session=session, target=Short.id, value=model.id)
 
     if not short:
         raise HTTPException(
@@ -185,7 +166,6 @@ async def get_short(session: Annotated[AsyncSession, Depends(database.session)],
         detail=[Message(msg="Short URL received")],
         content=[BaseShort.model_validate(short)]
     )
-
 
 @router.delete(
     path="/",
@@ -249,7 +229,7 @@ async def delete_shorts(session: Annotated[AsyncSession, Depends(database.sessio
     response_description="Details of deleted short URL"
 )
 async def delete_short(session: Annotated[AsyncSession, Depends(database.session)],
-                       model: Annotated[SingleGetShort, Path()]) -> Response:
+                       model: Annotated[GetShortByID, Path()]) -> Response:
     """
     Delete a specific short URL entry.
 
@@ -298,7 +278,7 @@ async def delete_short(session: Annotated[AsyncSession, Depends(database.session
     response_description="Updated short URL details"
 )
 async def update_short(session: Annotated[AsyncSession, Depends(database.session)],
-                       model: Annotated[SingleGetShort, Header()],
+                       model: Annotated[GetShortByID, Header()],
                        updated_model: Annotated[UpdateShort, Body()]) -> Response:
     """Update an existing short URL entry.
 
@@ -334,7 +314,8 @@ async def update_short(session: Annotated[AsyncSession, Depends(database.session
             ).model_dump()
         )
 
-    short_unique: Optional[Short] = await ShortRepository().get(session=session, target=Short.code, value=updated_model.code)
+    short_unique: Optional[Short] = await ShortRepository().get(session=session, target=Short.code,
+                                                                value=updated_model.code)
     if short_unique:
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,

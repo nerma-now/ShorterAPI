@@ -64,24 +64,12 @@ class UpdateShort(BaseModel):
         description="Optional expiration datetime (UTC)"
     )
 
-class SingleGetShort(BaseModel):
+class GetShortByID(BaseModel):
     """Model for get short URL object using ID"""
 
     id: uuid.UUID = Field(
         ...,
         description="Unique identifier for the short URL"
-    )
-
-class FullGetShort(BaseModel):
-    """Model for get short URL object using ID or code"""
-
-    id: Optional[uuid.UUID] = Field(
-        default=None,
-        description="Unique identifier for the short URL"
-    )
-    code: Optional[Annotated[str, MinLen(1), MaxLen(6)]] = Field(
-        default=None,
-        description="Short code for the URL"
     )
 
 class CreateShort(BaseModel):
@@ -101,4 +89,4 @@ class CreateShort(BaseModel):
     )
 
 
-__all__ = ["BaseShort", "UpdateShort", "SingleGetShort", "FullGetShort", "CreateShort"]
+__all__ = ["BaseShort", "UpdateShort", "GetShortByID", "CreateShort"]

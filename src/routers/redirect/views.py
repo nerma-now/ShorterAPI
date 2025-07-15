@@ -1,4 +1,3 @@
-from email import header
 from http import HTTPStatus
 
 from typing import Annotated, Optional
@@ -15,11 +14,11 @@ from infrastructure.database import database
 from infrastructure.database.models import Short
 from infrastructure.database.crud import ShortRepository
 
-from .schemas import GetShort, UrlShort
+from .schemas import GetShortByCode, ResponseShort
 
 router: APIRouter = APIRouter(
-    prefix="/redirect",
-    tags=["redirect"]
+    prefix="/redirects",
+    tags=["redirects"]
 )
 
 
@@ -46,13 +45,13 @@ router: APIRouter = APIRouter(
     """
 )
 async def get_redirect(session: Annotated[AsyncSession, Depends(database.session)],
-                       model: Annotated[GetShort, Path()],
+                       model: Annotated[GetShortByCode, Path()],
                        request: Request) -> Response | RedirectResponse:
     """Handle short URL redirection with content negotiation.
 
     Args:
         session: Database session
-        code: Short URL code to lookup
+        code: Short code for the URL
         request: Original request for header inspection
 
     Returns:
@@ -72,9 +71,7 @@ async def get_redirect(session: Annotated[AsyncSession, Depends(database.session
             ).model_dump()
         )
 
-    model: UrlShort = UrlShort(
-        url=short.url
-    )
+    model: ResponseShort = ResponseShort.model_validate(short)
 
     if request.headers.get("accept") == "application/json":
         return Response(

@@ -1,10 +1,12 @@
+import uuid
+
 from typing import Annotated
 from annotated_types import MinLen, MaxLen
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
-class GetShort(BaseModel):
+class GetShortByCode(BaseModel):
     """Model for get short URL object"""
 
     code: Annotated[str, MinLen(1), MaxLen(6)] = Field(
@@ -12,13 +14,19 @@ class GetShort(BaseModel):
         description="Short code for the URL"
     )
 
-class UrlShort(BaseModel):
-    """Model for get original long URL object"""
+class ResponseShort(BaseModel):
+    """Model for getting ID and long URL of an object"""
 
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID = Field(
+        ...,
+        description="Unique identifier for the short URL"
+    )
     url: str = Field(
         ...,
         description="Original long URL"
     )
 
 
-__all__ = ["GetShort", "UrlShort"]
+__all__ = ["GetShortByCode", "ResponseShort"]

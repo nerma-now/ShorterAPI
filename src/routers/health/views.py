@@ -5,8 +5,8 @@ from fastapi import APIRouter
 from src.routers.schemas import Response, Message
 
 router: APIRouter = APIRouter(
-    prefix='/health',
-    tags=['health']
+    prefix='/healths',
+    tags=['healths']
 )
 
 

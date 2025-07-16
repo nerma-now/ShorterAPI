@@ -1,7 +1,7 @@
 [project]
 name = "shorter"
 version = "0.1.0"
-description = "Add your description here"
+description = " FastAPI service for shortening links "
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.16.2",
